@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harness-demo-lab
+  labels:
+    app: harness-demo-lab
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: harness-demo-lab
+  template:
+    metadata:
+      labels:
+        app: harness-demo-lab
+    spec:
+      containers:
+        - name: harness-demo-lab
+          image: robertgusmann/harness-demo-lab:latest
+          ports:
+            - containerPort: 8080

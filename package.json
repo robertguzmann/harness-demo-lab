@@ -1,0 +1,13 @@
+{
+  "name": "harness-demo-lab",
+  "version": "1.0.0",
+  "description": "Simple Node.js app for Harness CI/CD demo lab",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}

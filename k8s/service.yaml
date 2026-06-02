@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: harness-demo-lab
+spec:
+  type: ClusterIP
+  selector:
+    app: harness-demo-lab
+  ports:
+    - port: 80
+      targetPort: 8080
