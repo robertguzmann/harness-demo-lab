@@ -1,15 +1,22 @@
+# Sanitized Harness pipeline reference
+#
+# This file documents the Harness CI/CD workflow used for the assessment.
+# It does not contain secrets, tokens, account IDs, delegate tokens, or connector credentials.
+
 pipeline:
   name: Harness DemoLab CI
   identifier: Harness_DemoLab_CI
   projectIdentifier: DemoLab
   orgIdentifier: default
-  tags: {}
   properties:
     ci:
       codebase:
         connectorRef: GitHub_DemoLab_Repository
         repoName: harness-demo-lab
-        build: <+input>
+        build:
+          type: branch
+          spec:
+            branch: main
   stages:
     - stage:
         name: Build and Push Image
@@ -62,3 +69,40 @@ pipeline:
                       - <+pipeline.sequenceId>
                     dockerfile: Dockerfile
                     context: .
+    - stage:
+        name: Deploy to Kubernetes
+        identifier: Deploy_to_Kubernetes
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: harness_demo_lab
+            serviceInputs:
+              manifests:
+                - manifest:
+                    identifier: k8s_manifests
+                    type: K8sManifest
+                    spec:
+                      store:
+                        type: Github
+                        spec:
+                          connectorRef: GitHub_DemoLab_Repository
+                          repoName: harness-demo-lab
+                          branch: main
+                          paths:
+                            - k8s/
+          environment:
+            environmentRef: dev
+            infrastructureDefinitions:
+              - identifier: minikube_demo_lab
+                inputs:
+                  namespace: demo-lab
+                  connectorRef: Kubernetes_DemoLab
+          execution:
+            strategy:
+              type: Canary
+              spec:
+                canary:
+                  instanceCount: 1
+                primary:
+                  type: Rolling
