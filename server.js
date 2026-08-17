@@ -1,6 +1,9 @@
 const express = require("express");
+const helmet = require("helmet");
 const app = express();
 const port = process.env.PORT || 8080;
+
+app.use(helmet());
 
 app.get("/", (req, res) => {
   res.send("Harness Demo Lab is running.");
